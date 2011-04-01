@@ -60,7 +60,20 @@ class TestTexticle < TexticleTestCase
     ns = x.named_scopes.first[1].call('foo bar "foo bar"')
     assert_match(/foo & bar & foo\\ bar/, ns[:select])
   end
- 
+  
+  def test_single_quotes_escaped
+    x = fake_model
+    x.class_eval do
+      extend Texticle
+      index('awesome') do
+        name
+      end
+    end
+    
+    ns = x.named_scopes.first[1].call("Joe's Diner")
+    assert_match(/Joe''s Diner/, ns[:select])
+  end
+  
   def test_wildcard_queries
     x = fake_model
     x.class_eval do
