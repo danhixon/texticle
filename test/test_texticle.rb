@@ -71,7 +71,20 @@ class TestTexticle < TexticleTestCase
     end
     
     ns = x.named_scopes.first[1].call("Joe's Diner")
-    assert_match(/Joe''s Diner/, ns[:select])
+    assert_match(/Joe''s & Diner/, ns[:select])
+  end
+  
+  def test_no_order
+    x = fake_model
+    x.class_eval do
+      extend Texticle
+      index('awesome') do
+        name
+      end
+    end
+    
+    ns = x.named_scopes.first[1].call("Joe's Diner")
+    assert_nil(ns[:order])
   end
   
   def test_wildcard_queries
